@@ -1,5 +1,5 @@
 # Algorithms
-## Backtracking with duplicates
+## Backtracking without duplicates
 ```javascript
 const subsets: string[][] = [];
 
@@ -49,4 +49,50 @@ const result: string[][] = [];
     }
 
     part(s, [], result);
+```
+## depth first search
+```javascript
+function canFinish(numCourses: number, prerequisites: number[][]): boolean {
+    const map: Map<number, number[]> = new Map();
+    for (let pre of prerequisites) {
+        const arr = map.get(pre[0]);
+        if (arr) {
+            arr.push(pre[1]);
+        }
+        else {
+            map.set(pre[0], [pre[1]]);
+        }
+    }
+    
+    const set: Set<number> = new Set();
+
+    const DFS = (course: number): boolean => {
+        if (set.has(course)) {
+            return false;
+        }
+
+        const pres = map.get(course)
+
+        if (pres === undefined || pres?.length === 0) {
+            return true;
+        }
+
+        set.add(course);
+
+        for (let pre of pres) {
+            if(DFS(pre) === false) return false;
+        }
+
+        set.delete(course);
+        map.set(course, []);
+
+        return true;
+    }
+
+    for (let i =0; i < numCourses; i++) {
+        if(DFS(i) === false) return false;
+    }
+
+    return true;
+}
 ```
